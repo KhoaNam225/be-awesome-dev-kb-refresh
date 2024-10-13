@@ -19,6 +19,7 @@ Resources:
       Runtime: python3.12
       Architectures:
         - x86_64
+      Role: arn:aws:iam::629872170007:role/be-awesome-dev-kb-refresh-role
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
@@ -37,6 +38,3 @@ Outputs:
   KnowledgeBaseUpdateFunction:
     Description: Knowledge Base Update Function Lambda Function ARN
     Value: !GetAtt KnowledgeBaseUpdateFunction.Arn
-  KnowledgeBaseUpdateFunctionIamRole:
-    Description: Implicit IAM Role created for Knowledge Base Update Function function
-    Value: !GetAtt KnowledgeBaseUpdateFunctionRole.Arn

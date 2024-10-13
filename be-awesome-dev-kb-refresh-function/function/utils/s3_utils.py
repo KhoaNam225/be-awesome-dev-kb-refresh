@@ -73,10 +73,11 @@ def sync_buckets_content(source_bucket: str, dest_bucket: str) -> bool:
 def write_posts_summary_content(file_path: str, summaries: List[Summary]) -> bool:
     print(f"Starting writing summary content to file {file_path}")
     with open(file_path, "w", encoding="utf-8") as output_file:
+        output_file.write(
+            "# Summary\n\nHere is a summary of all topics covered in beAwesome.dev website. Each topic comes with a name and a brief explanation on the topic.\n"
+        )
         for s in summaries:
-            output_file.write(f"Topic: {s.main_topic}\n")
-            output_file.write(f"Summary:\n{s.summary_content}\n\n")
-            output_file.write("\n\n===================================\n\n")
+            output_file.write(f"* {s.main_topic}: {s.summary_content[:200]}\n\n")
             print(f"Written summary content of {s.main_topic} to file")
 
     return True

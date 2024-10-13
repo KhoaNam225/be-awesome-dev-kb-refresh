@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  be-awesome-dev-kb-refresh-function
+
+  Sample SAM Template for be-awesome-dev-kb-refresh-function
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 300
+
+Resources:
+  KnowledgeBaseUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: function/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: "true"
+Outputs:
+  KnowledgeBaseUpdateFunction:
+    Description: Knowledge Base Update Function Lambda Function ARN
+    Value: !GetAtt KnowledgeBaseUpdateFunction.Arn
+  KnowledgeBaseUpdateFunctionIamRole:
+    Description: Implicit IAM Role created for Knowledge Base Update Function function
+    Value: !GetAtt KnowledgeBaseUpdateFunctionRole.Arn

@@ -63,13 +63,13 @@ def init_summary_chain(llm):
     return chain
 
 
-def generate_summaries(posts: List[Post], summary_chain, output_file_name: str):
+def generate_summaries(posts: List[Post], summary_chain):
     summaries: List[Summary] = []
     for post in posts:
         post_content = post.content
         post_name = post.filename
 
-        MAX_ATTEMPT = 3
+        MAX_ATTEMPT = 10
         attempt = 1
         response: Summary = summary_chain.invoke(
             {"content": post_content, "article_name": post_name.split("/")[-1]}
@@ -81,14 +81,7 @@ def generate_summaries(posts: List[Post], summary_chain, output_file_name: str):
             )
             attempt += 1
 
-        print(response)
-        summaries.append(response)
-
-    with open(output_file_name, "w", encoding="utf-8") as output_file:
-        for s in summaries:
-            output_file.write(f"Topic: {s.main_topic}\n")
-            output_file.write(f"Summary:\n{s.summary_content}\n\n")
-            output_file.write("\n\n===================================\n\n")
-            print(f"Written summary content of {s.main_topic} to file")
+        if response is not None:
+            summaries.append(response)
 
     return summaries
